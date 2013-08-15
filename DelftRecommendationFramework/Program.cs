@@ -10,6 +10,7 @@ namespace DelftRecommendationFramework
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("test");
         }
     }
 }

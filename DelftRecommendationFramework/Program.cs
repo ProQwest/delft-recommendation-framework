@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DelftRecommendationFramework
+namespace DRF
 {
     class Program
     {
         static void Main(string[] args)
         {
             Console.WriteLine("test");
+
         }
     }
 }

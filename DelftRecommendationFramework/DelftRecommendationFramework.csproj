@@ -7,7 +7,7 @@
     <ProjectGuid>{30C0C83C-35D4-4FF8-AD82-EEBC49194E25}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DelftRecommendationFramework</RootNamespace>
+    <RootNamespace>DRF</RootNamespace>
     <AssemblyName>DelftRecommendationFramework</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

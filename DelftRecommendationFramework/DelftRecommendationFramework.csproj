@@ -35,6 +35,9 @@
     <Reference Include="C5">
       <HintPath>..\Lib\C5.dll</HintPath>
     </Reference>
+    <Reference Include="LinqLib">
+      <HintPath>..\..\DelftClassificationFramework\Lib\LinqLib.dll</HintPath>
+    </Reference>
     <Reference Include="MathNet.Numerics">
       <HintPath>..\Lib\MathNet.Numerics.dll</HintPath>
     </Reference>
@@ -50,6 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonExtensions.cs" />
+    <Compile Include="Data\AmazonProduct.cs" />
+    <Compile Include="IO\AmazonData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

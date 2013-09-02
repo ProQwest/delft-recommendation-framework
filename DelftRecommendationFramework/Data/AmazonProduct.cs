@@ -27,13 +27,9 @@ namespace DRF.Data
         }
     }
 
-    public class ProductReview
+    public class ProductReview : ItemRating
     {
         public DateTime Date { get; set; }
-
-        public string UserId { get; set; }
-
-        public int Rating { get; set; }
 
         public int Votes { get; set; }
 

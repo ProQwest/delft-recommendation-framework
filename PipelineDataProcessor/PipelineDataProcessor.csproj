@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{30C0C83C-35D4-4FF8-AD82-EEBC49194E25}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{9D865181-4C9E-4809-BC39-36F8A47F5342}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DRF</RootNamespace>
-    <AssemblyName>DelftRecommendationFramework</AssemblyName>
+    <RootNamespace>PipelineDataProcessor</RootNamespace>
+    <AssemblyName>PipelineDataProcessor</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,18 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="C5">
-      <HintPath>..\Lib\C5.dll</HintPath>
-    </Reference>
-    <Reference Include="LinqLib">
-      <HintPath>..\..\DelftClassificationFramework\Lib\LinqLib.dll</HintPath>
-    </Reference>
-    <Reference Include="MathNet.Numerics">
-      <HintPath>..\Lib\MathNet.Numerics.dll</HintPath>
-    </Reference>
-    <Reference Include="MyMediaLite">
-      <HintPath>..\Lib\MyMediaLite.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,26 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonExtensions.cs" />
-    <Compile Include="Data\AmazonProduct.cs" />
-    <Compile Include="Data\Rating.cs" />
-    <Compile Include="IO\AmazonData.cs" />
-    <Compile Include="Pipeline\LibFmFormatter.cs" />
-    <Compile Include="Pipeline\LibFmTester.cs" />
-    <Compile Include="Pipeline\MfTester.cs" />
-    <Compile Include="Pipeline\MovieLensFormatter.cs" />
-    <Compile Include="Pipeline\TrainTestSpilitter.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="CachBasedProcessor.cs" />
+    <Compile Include="IProcessor.cs" />
+    <Compile Include="Pipeline.cs" />
+    <Compile Include="PipelineContext.cs" />
+    <Compile Include="PipelineException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PipelineDataProcessor\PipelineDataProcessor.csproj">
-      <Project>{9d865181-4c9e-4809-bc39-36f8a47f5342}</Project>
-      <Name>PipelineDataProcessor</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

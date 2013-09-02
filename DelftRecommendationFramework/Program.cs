@@ -8,6 +8,9 @@ using MyMediaLite.RatingPrediction;
 using MyMediaLite.Data;
 using MyMediaLite.Eval;
 using DRF.IO;
+using PipelineDataProcessor;
+using DRF.Pipeline;
+using System.Diagnostics;
 
 namespace DRF
 {
@@ -15,25 +18,44 @@ namespace DRF
     {
         static void Main(string[] args)
         {
-            //AmazonData.ConvertToMovieLensFormat(@"D:\Data\Datasets\Amazon\amazon-meta.txt",
-            //    @"D:\Data\Datasets\Amazon\amazon-books-ml-format.txt");
+            //Execute();
+            //AmazonData.PrintNoBooks();
 
-            IRatings train;
-            IRatings test;
-
-            AmazonData.ReadTrainTest(@"D:\Data\Datasets\Amazon\amazon-books-ml-format.txt", (float) 0.6, out train, out test);
-
-            var recom = new UserItemBaseline();
-            recom.Ratings = train;
-            recom.Train();
-
-            // measure the accuracy on the test data set
-            var results = recom.Evaluate(test);
-            Console.WriteLine("RMSE={0} MAE={1}", results["RMSE"], results["MAE"]);
-            Console.WriteLine(results);
-            
-            
+            RunPipeline();
+            Console.WriteLine("Finished!");
             Console.ReadKey();
         }
+
+        public static void RunPipeline()
+        {
+            PipelineDataProcessor.Pipeline p = new PipelineDataProcessor.Pipeline();
+
+            p.AddProcessor(new MovieLensFormatter(@"D:\Data\Datasets\Amazon\amazon-meta.txt"));
+            p.AddProcessor(new TrainTestSpilitter(0.7));
+            //p.AddProcessor(new MfTester());
+            p.AddProcessor(new LibFmFormatter());
+            p.AddProcessor(new LibFmTester());
+
+
+            p.Execute();
+        }
+
+        
+        public static void Execute(int num = 2)
+        {
+            switch (num)
+            { 
+                case 1:
+                    AmazonData.GetHighRatedUser(@"D:\Data\Datasets\Amazon\amazon-books-ml-format.txt",
+                        @"D:\Data\Datasets\Amazon\amazon-books-r30.txt");
+                    break;
+                case 2:
+                    AmazonData.ConvertToLibFmFormat(@"D:\Data\Datasets\Amazon\amazon-books-ml-format.txt",
+                        @"D:\Data\Datasets\Amazon\amazon-musics-ml-format.txt",
+                        @"D:\Data\Datasets\Amazon\amazon-books-ml-format.libfm");
+                    break;
+            }
+        }
+
     }
 }

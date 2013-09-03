@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace DRF.Pipeline
 {
-    public class LibFmTester : IProcessor, IConfigurationInfo
+    public class LibFmTester : IProcessor, IProcessorInfo
     {
         private string _libFmPath = @"D:\Programs\libfm-1.40.windows\libfm.exe";
         private string _additionalArgs = "";
@@ -49,6 +49,8 @@ namespace DRF.Pipeline
                 }
             };
 
+            string libFMTrainRMSE = "", libFMTestRMSE = "";
+
             libFm.OutputDataReceived += (p, dataLine) =>
             {
                 var data = dataLine.Data;
@@ -60,8 +62,8 @@ namespace DRF.Pipeline
                     // Store the results of this apprach in pipeline context
                     if (data.StartsWith("#Iter"))
                     {
-                        context["LibFmTrainRMSE"] = data.Substring(data.IndexOf("Train") + 6, 6);
-                        context["LibFmTestRMSE"] = data.Substring(data.IndexOf("Train") + 6, 6);
+                        libFMTrainRMSE = data.Substring(data.IndexOf("Train") + 6, 6);
+                        libFMTestRMSE = data.Substring(data.IndexOf("Test") + 6, 6);
                     }
                 }
             };
@@ -69,6 +71,9 @@ namespace DRF.Pipeline
             libFm.Start();
             libFm.BeginOutputReadLine();
             libFm.WaitForExit();
+
+            context["LibFmTrainRMSE"] = libFMTrainRMSE;
+            context["LibFmTestRMSE"] = libFMTestRMSE;
         }
 
         private string BuildArguments(string trainFile, string testFile)
@@ -95,6 +100,16 @@ namespace DRF.Pipeline
             pc["AdditionalArgs"] = _additionalArgs;
 
             return pc;
+        }
+
+
+        public ProcessResult GetProcessResult(PipelineContext context)
+        {
+            var pr = new ProcessResult();
+            pr["LibFmTrainRMSE"] = context.GetAsString("LibFmTrainRMSE");
+            pr["LibFmTestRMSE"] = context.GetAsString("LibFmTestRMSE");
+
+            return pr;
         }
     }
 

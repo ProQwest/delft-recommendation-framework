@@ -13,11 +13,11 @@ using MyMediaLite;
 
 namespace DRF.Pipeline
 {
-    public class MfTester : IProcessor, IConfigurationInfo
+    public class MediaLiteTester : IProcessor, IProcessorInfo
     {
         private IRecommender _recommender;
         
-        public MfTester(IRecommender recommender)
+        public MediaLiteTester(IRecommender recommender)
         {
             _recommender = recommender;
         }
@@ -41,8 +41,9 @@ namespace DRF.Pipeline
 
             Console.WriteLine("Testing...");
             var results = recom.Evaluate(testSet);
-
-            Console.WriteLine(results);
+            
+            context["MediaLite_RMSE"] = results["RMSE"];
+            context["MediaLite_MAE"] = results["MAE"];
         }
 
         public string GetDescription()
@@ -73,6 +74,16 @@ namespace DRF.Pipeline
             pc["TestFile"] = context.GetAsString("MovieLensTest");
 
             return pc;
+        }
+
+
+        public ProcessResult GetProcessResult(PipelineContext context)
+        {
+            var pr = new ProcessResult();
+            pr["MediaLite_RMSE"] = context.GetAsString("MediaLite_RMSE");
+            pr["MediaLite_MAE"] = context.GetAsString("MediaLite_MAE");
+
+            return pr;
         }
     }
 }

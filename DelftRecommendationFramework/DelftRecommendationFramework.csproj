@@ -59,7 +59,7 @@
     <Compile Include="IO\AmazonData.cs" />
     <Compile Include="Pipeline\LibFmFormatter.cs" />
     <Compile Include="Pipeline\LibFmTester.cs" />
-    <Compile Include="Pipeline\MfTester.cs" />
+    <Compile Include="Pipeline\MediaLiteTester.cs" />
     <Compile Include="Pipeline\MovieLensFormatter.cs" />
     <Compile Include="Pipeline\TrainTestSpilitter.cs" />
     <Compile Include="Program.cs" />

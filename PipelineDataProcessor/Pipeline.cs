@@ -35,17 +35,27 @@ namespace PipelineDataProcessor
                 Console.WriteLine(String.Format("\nProcessor {0}: {1}", i + 1, p.GetDescription()));
                 Console.WriteLine("-----------------------------------------------------------------");
 
-                if (p is IConfigurationInfo)
+                if (p is IProcessorInfo)
                 {
-                    ProcessConfiguration pc = (p as IConfigurationInfo).GetConfiguration(context);
+                    var pi = p as IProcessorInfo;
+
+                    ProcessConfiguration pc = pi.GetConfiguration(context);
+                    pc.PrintConfiguration();
 
                     if (!context.Configurations.Contains(pc, new ConfigurationComparer()))
                     {
-                        context.AddConfiguration(pc);
                         p.Process(context);
+                        // Update the Process configuration with results form process
+                        pc.ProcessResult = pi.GetProcessResult(context);
+
+                        context.AddConfiguration(pc);
                     }
                     else
                         Console.WriteLine("==> this process is already executed in context.");
+
+                    // Get the Correponding Process configuration from context which also includes results
+                    var originalPc = context.Configurations.Single(c => new ConfigurationComparer().Equals(c, pc));
+                    originalPc.ProcessResult.PrintResults();
                 }
                 else
                     p.Process(context);

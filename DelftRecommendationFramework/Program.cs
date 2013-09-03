@@ -32,9 +32,10 @@ namespace DRF
 
             p.AddProcessor(new MovieLensFormatter(@"D:\Data\Datasets\Amazon\amazon-meta.txt"));
             p.AddProcessor(new TrainTestSpilitter(0.7));
-            p.AddProcessor(new MfTester(new MatrixFactorization()));
-            //p.AddProcessor(new LibFmFormatter());
-            //p.AddProcessor(new LibFmTester());
+            p.AddProcessor(new MediaLiteTester(new MatrixFactorization()));
+            p.AddProcessor(new MediaLiteTester(new BiasedMatrixFactorization()));
+            p.AddProcessor(new LibFmFormatter());
+            p.AddProcessor(new LibFmTester());
 
             p.Execute();
         }

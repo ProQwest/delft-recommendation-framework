@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace PipelineDataProcessor
 {
-    public interface IConfigurationInfo
+    public interface IProcessorInfo
     {
         ProcessConfiguration GetConfiguration(PipelineContext context);
+        ProcessResult GetProcessResult(PipelineContext context);
     }
 }

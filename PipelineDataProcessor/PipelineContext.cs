@@ -42,7 +42,7 @@ namespace PipelineDataProcessor
 
         public string GetAsString(string name)
         {
-            string value = this[name] as string;
+            string value = this[name].ToString();
 
             if (String.IsNullOrEmpty(value))
                 throw new PipelineException(String.Format("The '{0}' does not exists in the context.", name));

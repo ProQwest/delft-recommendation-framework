@@ -9,27 +9,31 @@ using MyMediaLite.IO;
 using MyMediaLite.RatingPrediction;
 using MyMediaLite.Data;
 using MyMediaLite.Eval;
+using MyMediaLite;
 
 namespace DRF.Pipeline
 {
-    public class MfTester : IProcessor
+    public class MfTester : IProcessor, IConfigurationInfo
     {
+        private IRecommender _recommender;
+        
+        public MfTester(IRecommender recommender)
+        {
+            _recommender = recommender;
+        }
         
         public void Process(PipelineContext context)
         {
-            string movieLensTrain = context["MovieLensTrain"] as string;
-            string movieLensTest = context["MovieLensTest"] as string;
+            string movieLensTrain = context.GetAsString("MovieLensTrain");
+            string movieLensTest = context.GetAsString("MovieLensTest");
 
-            if (String.IsNullOrEmpty(movieLensTrain))
-                throw new PipelineException("The 'MovieLensTrain' does not exists in the context.");
-            
             var usersMap = new Mapping();
             var itemsMap = new Mapping();
             
             IRatings trainSet = ReadData(movieLensTrain, usersMap, itemsMap);
             IRatings testSet = ReadData(movieLensTest, usersMap, itemsMap);
 
-            var recom = new MatrixFactorization();
+            var recom = _recommender as IRatingPredictor;
             recom.Ratings = trainSet;
 
             Console.WriteLine("Training...");
@@ -59,6 +63,16 @@ namespace DRF.Pipeline
                 ratings.Add(usersMap.ToInternalID(r.User), itemsMap.ToInternalID(r.Item), r.Rating));
 
             return ratings;
+        }
+
+        public ProcessConfiguration GetConfiguration(PipelineContext context)
+        {
+            var pc = new ProcessConfiguration();
+            pc["Recommender"] = _recommender.GetType().Name;
+            pc["TrainFile"] = context.GetAsString("MovieLensTrain");
+            pc["TestFile"] = context.GetAsString("MovieLensTest");
+
+            return pc;
         }
     }
 }

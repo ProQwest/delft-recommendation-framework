@@ -18,11 +18,8 @@ namespace DRF.Pipeline
 
         public override void Process(PipelineContext context)
         {
-            string movieLensTrain = context["MovieLensTrain"] as string;
-            string movieLensTest = context["MovieLensTest"] as string;
-
-            if (String.IsNullOrEmpty(movieLensTrain))
-                throw new PipelineException("The 'MovieLensTrain' does not exists in the context.");
+            string movieLensTrain = context.GetAsString("MovieLensTrain");
+            string movieLensTest = context.GetAsString("MovieLensTest");
 
             string libFmTrain = movieLensTrain.GetDirectoryPath() + "\\" + movieLensTrain.GetFileName() + ".libfm";
             string libFmTest = movieLensTest.GetDirectoryPath() + "\\" + movieLensTest.GetFileName() + ".libfm";

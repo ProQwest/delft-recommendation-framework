@@ -10,28 +10,31 @@ using System.Threading;
 
 namespace DRF.Pipeline
 {
-    public class LibFmTester : IProcessor
+    public class LibFmTester : IProcessor, IConfigurationInfo
     {
         private string _libFmPath = @"D:\Programs\libfm-1.40.windows\libfm.exe";
         private string _additionalArgs = "";
 
-        public double LearningRate { get; set; }
+        public double LearningRate { get; set; } 
         public int Iterations { get; set; }
         public string Dimensions { get; set; }
         public FmLearnigAlgorithm LearningAlgorithm { get; set; }
 
         public LibFmTester(string additionalArgs = "")
         {
-            _additionalArgs = additionalArgs;    
+            _additionalArgs = additionalArgs;
+    
+            //Intialize properties
+            LearningRate = 0.1;
+            Iterations = 50;
+            Dimensions = "1,1,8";
+            LearningAlgorithm = FmLearnigAlgorithm.MCMC;
         }
 
         public void Process(PipelineContext context)
         {
-            string libFmTrain = context["LibFmTrain"] as string;
-            string libFmTest = context["LibFmTest"] as string;
-
-            if (String.IsNullOrEmpty(libFmTrain))
-                throw new PipelineException("The 'LibFmTrain' does not exists in the context.");
+            string libFmTrain = context.GetAsString("LibFmTrain");
+            string libFmTest = context.GetAsString("LibFmTest");
 
             var libFm = new Process
             {
@@ -70,19 +73,28 @@ namespace DRF.Pipeline
 
         private string BuildArguments(string trainFile, string testFile)
         {
-            string method = LearningAlgorithm != FmLearnigAlgorithm.MCMC ? LearningAlgorithm.ToString().ToLower() : "mcmc";
-            string learningRate = LearningRate > 0 ? LearningRate.ToString() : "0.1";
-            string iterations = Iterations > 0 ? Iterations.ToString() : "50";
-            string dim = Dimensions ?? "1,1,8";
-
-            return String.Format("-task r -train {0} -test {1} -method {2} -iter {3} -dim {4} -learn_rate {5} {6}", 
-                trainFile, testFile, method, iterations, dim, learningRate, _additionalArgs);
-
+            return String.Format("-task r -train {0} -test {1} -method {2} -iter {3} -dim {4} -learn_rate {5} {6}",
+                trainFile, testFile, LearningAlgorithm.ToString().ToLower(), Iterations, Dimensions, LearningRate, _additionalArgs);
         }
 
         public string GetDescription()
         {
             return "Testing Factorization Machines approach with LibFM.";
+        }
+
+        public ProcessConfiguration GetConfiguration(PipelineContext context)
+        {
+            var pc = new ProcessConfiguration();
+
+            pc["LearningAlgorithm"] = LearningAlgorithm.ToString();
+            pc["Iterations"] = Iterations.ToString();
+            pc["Dimensions"] = Dimensions;
+            pc["LearningRate"] = LearningRate.ToString();
+            pc["TrainFile"] = context.GetAsString("LibFmTrain");
+            pc["TestFile"] = context.GetAsString("LibFmTest");
+            pc["AdditionalArgs"] = _additionalArgs;
+
+            return pc;
         }
     }
 

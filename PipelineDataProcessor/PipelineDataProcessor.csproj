@@ -40,10 +40,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CachBasedProcessor.cs" />
+    <Compile Include="IConfigurationInfo.cs" />
     <Compile Include="IProcessor.cs" />
     <Compile Include="Pipeline.cs" />
     <Compile Include="PipelineContext.cs" />
     <Compile Include="PipelineException.cs" />
+    <Compile Include="ProcessConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

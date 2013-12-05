@@ -58,5 +58,10 @@ namespace PipelineDataProcessor
                 .ToList().ForEach(Console.WriteLine);
         }
 
+        public void UpdateContext(PipelineContext context)
+        {
+            _items.ToList().ForEach(kvp => context[kvp.Key] = kvp.Value);
+        }
+
     }
 }

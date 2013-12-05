@@ -22,6 +22,11 @@ namespace DRF
         {
             return path.Substring(path.LastIndexOf('\\') + 1, path.LastIndexOf('.') - path.LastIndexOf('\\') - 1);
         }
+
+        public static string GetFileExtension(this string path)
+        {
+            return path.Substring(path.LastIndexOf('.') + 1);
+        }
     }
 
     public static class IEnumerableExtensions

@@ -13,11 +13,13 @@ namespace DRF.Pipeline
     {
         private string _amazonDataFile;
         public string MovieLensFile { get; private set; }
+        private IList<AmazonProduct> _products;
 
         public MovieLensFormatter(string amazonDataFile, bool useCache = true) : base(useCache)
         {
             _amazonDataFile = amazonDataFile;
-            MovieLensFile = _amazonDataFile.GetDirectoryPath() + "\\" + _amazonDataFile.GetFileName() + ".ml";
+            _products = new List<AmazonProduct>();
+            MovieLensFile = _amazonDataFile.GetDirectoryPath() + "\\" + _amazonDataFile.GetFileName() + "-mb.ml";
         }
 
         public override void Process(PipelineContext context)
@@ -27,7 +29,9 @@ namespace DRF.Pipeline
             else
                 Console.WriteLine("==> loading cached data");
 
-            context["MovieLensFile"] = MovieLensFile;
+            //context["MovieLensFile"] = MovieLensFile;
+            context["AmazonProducts"] = _products;
+            context["AmazonDataFile"] = _amazonDataFile;
         }
 
         public override string GetDescription()
@@ -70,29 +74,32 @@ namespace DRF.Pipeline
 
                     while ((rline = reader.ReadLine()) != "")
                     {
-                        product.Reviews.Add(new ProductReview(rline.Trim()));
+                        product.Reviews.Add(new ProductReview(rline.Trim(), product));
                     }
                 }
                 else if (tline.StartsWith("discontinued"))
                     product.ASIN = "";
                 else if (tline.StartsWith("Id") && !String.IsNullOrEmpty(product.ASIN))
                 {
-                    if (product.Group == ProductGroup.Book)
-                    {
-                        foreach (ProductReview pr in product.Reviews)
-                        {
-                            writer.WriteLine(string.Format("{0}::{1}::{2}::{3}", pr.UserId, product.ASIN, pr.Rating, pr.Date.ToUnixEpoch()));
-                        }
-                    }
-                    product = new AmazonProduct();
-                    writer.Flush();
-                }
+                    //if (product.Group == ProductGroup.Book || product.Group == ProductGroup.Music)
+                    //{
+                    //    foreach (ProductReview pr in product.Reviews)
+                    //    {
+                    //        writer.WriteLine(string.Format("{0}::{1}::{2}::{3}", pr.UserId, product.ASIN, pr.Rating, pr.Date.ToUnixEpoch()));
+                    //    }
+                    //}
+                    //writer.Flush();
 
+                    _products.Add(product);
+                    
+                    product = new AmazonProduct();
+                }
             }
             
             reader.Close();
             writer.Close();
         }
+
 
     }
 }

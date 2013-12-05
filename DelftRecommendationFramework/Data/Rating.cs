@@ -20,11 +20,16 @@ namespace DRF.Data
         }
 
         public ItemRating(string line)
+            : this(line, "")
         {
-            string[] tokens = line.Split(new string[] { "::" }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public ItemRating(string line, string itemPrefix)
+        {
+            string[] tokens = line.Split(new string[] { "::", "," }, StringSplitOptions.RemoveEmptyEntries);
 
             UserId = tokens[0];
-            ItemId = tokens[1];
+            ItemId = tokens[1] + "d" + itemPrefix;
             Rating = Convert.ToInt32(tokens[2]);
         }
 

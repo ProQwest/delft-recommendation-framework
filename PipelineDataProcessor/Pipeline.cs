@@ -51,10 +51,13 @@ namespace PipelineDataProcessor
                         context.AddConfiguration(pc);
                     }
                     else
+                    {
                         Console.WriteLine("==> this process is already executed in context.");
+                    }
 
                     // Get the Correponding Process configuration from context which also includes results
                     var originalPc = context.Configurations.Single(c => new ConfigurationComparer().Equals(c, pc));
+                    originalPc.ProcessResult.UpdateContext(context);
                     originalPc.ProcessResult.PrintResults();
                 }
                 else

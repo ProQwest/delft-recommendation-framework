@@ -12,42 +12,49 @@ namespace DRF.Pipeline
     public class TrainTestSpilitter : CacheBasedProcessor
     {
         public double TrainRatio { get; set; }
-        
-        public TrainTestSpilitter(double trainRatio, bool useCash = true)
+        public String ContextName { get; set; }
+
+        public TrainTestSpilitter(double trainRatio, string contextName, bool useCash = true)
             : base(useCash)
         {
             TrainRatio = trainRatio;
+            ContextName = contextName;
         }
         
         public override void Process(PipelineContext context)
         {
-            string movieLensFile = context["MovieLensFile"] as string;
+            string inputFile = context.GetAsString(ContextName);
 
-            if (String.IsNullOrEmpty(movieLensFile))
-                throw new PipelineException("The 'MovieLensFile' does not exists in the context.");
-
-            string trainFile = movieLensFile.GetDirectoryPath() + "\\" + movieLensFile.GetFileName() + "-train" + TrainRatio.ToString() + ".ml";
-            string testFile = movieLensFile.GetDirectoryPath() + "\\" + movieLensFile.GetFileName() + "-test" + TrainRatio.ToString() + ".ml";
+            string trainFile = String.Format("{0}\\{1}-train{2}.{3}",
+                inputFile.GetDirectoryPath(), inputFile.GetFileName(), TrainRatio.ToString(), inputFile.GetFileExtension());
+            string testFile = String.Format("{0}\\{1}-test{2}.{3}",
+                inputFile.GetDirectoryPath(), inputFile.GetFileName(), TrainRatio.ToString(), inputFile.GetFileExtension());
 
             if (!File.Exists(trainFile) || !UseCach)
             {
-                var lines = File.ReadAllLines(movieLensFile).Shuffle().ToList();
-                int trainCount = (int)(TrainRatio * lines.Count());
-                File.WriteAllLines(trainFile, lines.Take(trainCount));
-                File.WriteAllLines(testFile, lines.Skip(trainCount));
+                Spilit(inputFile, trainFile, testFile, TrainRatio);
             }
             else
             {
                 Console.WriteLine("==> loading cached data");
             }
 
-            context["MovieLensTrain"] = trainFile;
-            context["MovieLensTest"] = testFile;
+            context["TrainFile"] = trainFile;
+            context["TestFile"] = testFile;
+        }
+
+        public static void Spilit(string inputFile, string trainFile, string testFile, double trainRatio)
+        {
+            var lines = File.ReadAllLines(inputFile).Shuffle().ToList();
+            int trainCount = (int)(trainRatio * lines.Count());
+            File.WriteAllLines(trainFile, lines.Take(trainCount));
+            File.WriteAllLines(testFile, lines.Skip(trainCount));
         }
 
         public override string GetDescription()
         {
             return "Splitting data to train and test portions.";
         }
+
     }
 }

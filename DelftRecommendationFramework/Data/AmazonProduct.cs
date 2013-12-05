@@ -31,12 +31,16 @@ namespace DRF.Data
     {
         public DateTime Date { get; set; }
 
+        public AmazonProduct Product { get; set; }
+
         public int Votes { get; set; }
 
         public int Helpful { get; set; }
 
-        public ProductReview(string line)
+        public ProductReview(string line, AmazonProduct product)
         {
+            Product = product;
+            
             // Sample line: 2000-7-28  cutomer: A2JW67OY8U6HHK  rating: 5  votes:  10  helpful:   9
             var tokens = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -45,6 +49,8 @@ namespace DRF.Data
             Rating = Convert.ToInt32(tokens[4]);
             Votes = Convert.ToInt32(tokens[6]);
             Helpful = Convert.ToInt32(tokens[8]);
+
+            ItemId = product.ASIN;
         }
     }
 

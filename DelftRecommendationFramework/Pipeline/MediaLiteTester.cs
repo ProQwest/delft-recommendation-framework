@@ -24,8 +24,8 @@ namespace DRF.Pipeline
         
         public void Process(PipelineContext context)
         {
-            string movieLensTrain = context.GetAsString("MovieLensTrain");
-            string movieLensTest = context.GetAsString("MovieLensTest");
+            string movieLensTrain = context.GetAsString("TrainFile");
+            string movieLensTest = context.GetAsString("TestFile");
 
             var usersMap = new Mapping();
             var itemsMap = new Mapping();
@@ -70,8 +70,8 @@ namespace DRF.Pipeline
         {
             var pc = new ProcessConfiguration();
             pc["Recommender"] = _recommender.GetType().Name;
-            pc["TrainFile"] = context.GetAsString("MovieLensTrain");
-            pc["TestFile"] = context.GetAsString("MovieLensTest");
+            pc["TrainFile"] = context.GetAsString("TrainFile");
+            pc["TestFile"] = context.GetAsString("TestFile");
 
             return pc;
         }

@@ -57,10 +57,17 @@
     <Compile Include="Data\AmazonProduct.cs" />
     <Compile Include="Data\Rating.cs" />
     <Compile Include="IO\AmazonData.cs" />
+    <Compile Include="IO\DomainPreprocessor.cs" />
+    <Compile Include="Pipeline\AmazonDataFilter.cs" />
+    <Compile Include="Pipeline\AmazonToLibFmFormatter.cs" />
+    <Compile Include="Pipeline\CrossDomainer.cs" />
+    <Compile Include="Pipeline\CsvToMovieLensFormatter.cs" />
+    <Compile Include="Pipeline\LibFmFeaturesExpander.cs" />
     <Compile Include="Pipeline\LibFmFormatter.cs" />
     <Compile Include="Pipeline\LibFmTester.cs" />
     <Compile Include="Pipeline\MediaLiteTester.cs" />
     <Compile Include="Pipeline\MovieLensFormatter.cs" />
+    <Compile Include="Pipeline\ResultsProcessor.cs" />
     <Compile Include="Pipeline\TrainTestSpilitter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

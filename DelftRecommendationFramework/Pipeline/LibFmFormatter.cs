@@ -18,8 +18,8 @@ namespace DRF.Pipeline
 
         public override void Process(PipelineContext context)
         {
-            string movieLensTrain = context.GetAsString("MovieLensTrain");
-            string movieLensTest = context.GetAsString("MovieLensTest");
+            string movieLensTrain = context.GetAsString("TrainFile");
+            string movieLensTest = context.GetAsString("TestFile");
 
             string libFmTrain = movieLensTrain.GetDirectoryPath() + "\\" + movieLensTrain.GetFileName() + ".libfm";
             string libFmTest = movieLensTest.GetDirectoryPath() + "\\" + movieLensTest.GetFileName() + ".libfm";
@@ -34,8 +34,8 @@ namespace DRF.Pipeline
             else
                 Console.WriteLine("==> loading cached data");
 
-            context["LibFmTrain"] = libFmTrain;
-            context["LibFmTest"] = libFmTest;
+            context["TrainFile"] = libFmTrain;
+            context["TestFile"] = libFmTest;
         }
 
         private void ConvertToLibFmFile(string inputFile, string outputFile, Dictionary<string, int> featDic)
